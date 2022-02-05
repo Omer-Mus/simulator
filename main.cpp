@@ -2,14 +2,14 @@
 #include "mass.h"
 #include "spring.h"
 #include <algorithm>
-
+#include <functional>
 std::vector<double> GRAVITY = {0,0,-9.81};
 const double DT = 0.0001;
 double T = 0;
 
 void time_inc() { T += DT; }
  
-void vectorMultiplication(std::vector <double> &, std::vector <double> &);
+auto vectorMultiplication(const std::vector <double> &, const std::vector <double> &);
 
 int main() {
   // pos: [0,0,3], mass: 0.8 kg
@@ -78,7 +78,10 @@ int main() {
   return 0;
 }
 
-void vectorMultiplication(std::vector <double> &v1, std::vector <double> &v2)
+auto vectorMultiplication(const std::vector<double>& v1, const std::vector<double>& v2)
 {
-   std::transform(v1.begin(), v1.end(), v2.begin(), std::multiplies<double>() );
+    std::vector<double> result;
+    std::transform(v1.begin(), v1.end(), v2.begin(), 
+                   std::back_inserter(result), std::multiplies<double>());
+    return result;
 }
