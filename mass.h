@@ -3,7 +3,12 @@
 #ifndef MASS_H
 #define MASS_H
 
-
+/*
+I would not include DT as a variablein Mass.h; Masses don't deal with simulations,
+only simulations do, so the file where DT belongs is simulation.cpp (or main.cpp in your case)
+If you want to include an update in as a member/class function, then you would pass DT as a parameter
+PS: If you don't use the mass.external variable, then get rid of it.
+*/
 class Mass {
   
 public:

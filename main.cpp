@@ -1,3 +1,13 @@
+/*
+ * main.cpp
+ * Runs simulation
+ * find a way to visualize your output, for now it doesn't have to be high-fidelity
+ * You could literally just write your spring end locations to a text file that you can load in python and render into a video, for example.
+ * You just need to be able to see what is going on, so you know if your simulation is working.
+ * See the rest of my comments below
+ * The next step is to run this, and see if it works, you can also print the coordinates, and see if looks correct, e.g. if the positions move vertically, fall on the plain and then rise up again.
+ */
+
 #include <iostream>
 #include "mass.h"
 #include "spring.h"
@@ -21,7 +31,7 @@ int main() {
   std::vector<Mass> masses = {m1, m2};
   std::vector<Spring> springs = {s1};
 
-
+  //<Start Simulation Loop>
   /**************************************************
 
     Part 4.a.
@@ -70,10 +80,12 @@ int main() {
   **************************************************/
 
   for (auto& m : masses) {
-    m.accelerate();
+    m.accelerate(); // be consistent in your naming e.g. update_acceleration()
+    // Where is your velocity update?
     m.update_position();
     
   }
+  //<end Simulation Loop>
 
   return 0;
 }
