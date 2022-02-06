@@ -12,13 +12,11 @@ PS: If you don't use the mass.external variable, then get rid of it.
 class Mass {
   
 public:
-  const double DT = 0.0001;
   double m=0;
-  std::vector<double> p;
-  std::vector<double> v;
-  std::vector<double> a;
-  std::vector<double> F;
-  std::vector<double> external; //external forces
+  std::vector<double> p; //position
+  std::vector<double> v; //velocity
+  std::vector<double> a; //acceleration
+  std::vector<double> F; //external forces
 
   Mass(double x, double y, double z, double m) {
     m = m;  // intialize mass
@@ -32,7 +30,6 @@ public:
       v.push_back(0);
       a.push_back(0);
       F.push_back(0); // F = a*m
-      external.push_back(0);
     }
     // intially, gravitiy is the acceleration
   }
@@ -40,6 +37,7 @@ public:
   ~Mass(){ 
 
   }
+  
   // assigment operator overload
   void operator = (const Mass &M ) { 
     m = M.m;
@@ -64,14 +62,14 @@ public:
   }
 
   // update position 
-  void update_position() {
+  void update_position(const double DT) {
     for (int i = 0; i < 3; i++ ) {
       p[i] = p[i] + DT*v[i];
     }
   }
 
   // calculate
-  void accelerate() {
+  void update_acceleration(const double DT) {
     for (int i = 0; i < 3; i++ ) {
       a[i] = F[i]/m;
     }
