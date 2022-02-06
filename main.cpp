@@ -68,8 +68,8 @@ int main() {
       tempUnit[i] /= sqrt(magnitude);
     for (int i=0; i<3; i++) {
       tempUnit[i] *= f;
-      s.m1.external[i] += tempUnit[i];
-      s.m2.external[i] -= tempUnit[i];
+      s.m1.F[i] += tempUnit[i];
+      s.m2.F[i] -= tempUnit[i];
     }
   
   }
@@ -82,7 +82,8 @@ int main() {
   for (auto& m : masses) {
     m.accelerate(); // be consistent in your naming e.g. update_acceleration()
     // Where is your velocity update?
-    m.update_position();
+    m.update_velocity(DT);
+    m.update_position(DT);
     
   }
   //<end Simulation Loop>
