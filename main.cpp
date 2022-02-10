@@ -14,7 +14,6 @@
 #include <algorithm>
 #include <functional>
 #include <fstream>
-#include <string>
 #include <iterator>
 
 
@@ -36,6 +35,10 @@ int main() {
     std::vector<Mass> masses = {m1, m2};
     std::vector<Spring> springs = {s1};
     int c = 0;
+
+    std::ofstream fs1("mass1.txt");
+    std::ofstream fs2("mass2.txt");
+
     //<Start Simulation Loop>
     while (T < 5) {
       /**************************************************
@@ -76,37 +79,45 @@ int main() {
           s.m2.F[i] -= tempUnit[i];
         }
 
-        if (c == 50) {
-            std::vector<double> f(s1.getVec1());
-            std::vector<double> d(s1.getVec2());
-
-
-            std::ofstream fs("mass1.csv");
-            std::ostream_iterator<std::string> res1(fs, " ");
-            std::copy(f.begin(), f.end(), res1);
-
-
-            std::ofstream fs2("mass2.csv");
-            std::ostream_iterator<std::string> res(fs2, " ");
-            std::copy(d.begin(), d.end(), res);
-            c = 0;
-        }
-        time_inc();
-        c++;
-
-      }
       /**************************************************
         Part 4.b.
       **************************************************/
-
+      bool flag = true;
       for (auto& m : masses) {
         m.update_acceleration();
         m.update_velocity(DT);
         m.update_position(DT);
+        if (flag == true) {
+            fs1 << 0 << " " << 0 << " " << m.p[-1] << std::endl;
+            flag = false;
+        } else {
+            fs2 << 0 << " " << 0 << " " << m.p[-1] << std::endl;
+        }
+
+
+
       }
+//
+//      std::vector<double> ms1(s1.getVec1());
+//      std::vector<double> ms2(s1.getVec2());
+//
+//
+//      for(std::vector<double>::const_iterator i = ms1.begin(); i != ms1.end(); ++i)
+//          fs1 << *i << ' ';
+//      fs1 << std::endl;
+//
+//      for(std::vector<double>::const_iterator i = ms2.begin(); i != ms2.end(); ++i)
+//          fs2 << *i << ' ';
+//      fs2 << std::endl;
+          c = 0;
+//          }
+          time_inc();
+//          c++;
 
-
+      }
     } //<end Simulation Loop>
+    fs1.close();
+    fs2.close();
     return 0;
 }
 
