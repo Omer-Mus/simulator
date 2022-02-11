@@ -17,13 +17,13 @@
 #include <iterator>
 
 
-std::vector<double> GRAVITY = {0,0,-9.81};
-const double DT = 0.0001;
-double T = 0;
+std::vector<float> GRAVITY = {0,0,-9.81};
+const float DT = 0.00001;
+float T = 0;
 
 void time_inc() { T += DT; }
 
-auto vectorMultiplication(const std::vector <double> &, const std::vector <double> &);
+auto vectorMultiplication(const std::vector <float> &, const std::vector <float> &);
 
 int main() {
     // pos: [0,0,3], mass: 0.8 kg
@@ -36,95 +36,82 @@ int main() {
     std::vector<Spring> springs = {s1};
     int c = 0;
 
-    std::ofstream fs1("mass1.txt");
-    std::ofstream fs2("mass2.txt");
+    std::ofstream fs1("mass1.csv");
+    std::ofstream fs2("mass2.csv");
 
     //<Start Simulation Loop>
-    while (T < 5) {
-      /**************************************************
-        Part 4.a.
-      **************************************************/
-      //compute the F forces
-      for (auto& m: masses) {
+    while (T < 4) {
+        /**************************************************
+          Part 4.a.
+        **************************************************/
+        //compute the F forces
+        for (auto& m: masses) {
 
-        std::vector<double> temp;
-        for (int i=0; i<3; i++)
-          temp.push_back(m.m * GRAVITY[i]);
+            std::vector<float> temp;
+            for (int i=0; i<3; i++)
+                temp.push_back(m.m * GRAVITY[i]);
 
-        for (int i=0; i<3; i++)
-          m.F[i] += temp[i];
+            for (int i=0; i<3; i++)
+                m.F[i] += temp[i];
 
-        if (m.p[2] < 0) {
-          std::vector<double> c_pos = {0,0,100'000*m.p[2]*(-1)};
-          for (int i=0; i<3; i++)
-            m.F[i] += c_pos[i];
-        }
-      }
-
-      //iterate over the springs
-      for (auto& s : springs) {
-        double f = s.springForce();
-        std::vector<double> temp;
-        double magnitude = 0;
-        for (int i=0; i<3; i++) {
-          temp.push_back(s.m1.p[i]-s.m2.p[i]);
-          magnitude += pow(s.m1.p[i]-s.m2.p[i], 2);
-        }
-        std::vector<double> tempUnit = temp;
-        for (int i=0; i<3; i++)
-          tempUnit[i] /= sqrt(magnitude);
-        for (int i=0; i<3; i++) {
-          tempUnit[i] *= f;
-          s.m1.F[i] += tempUnit[i];
-          s.m2.F[i] -= tempUnit[i];
+            if (m.p[2] < 0) {
+                std::vector<float> c_pos = {0,0,100'000*m.p[2]*(-1)};
+                for (int i=0; i<3; i++)
+                    m.F[i] += c_pos[i];
+            }
         }
 
-      /**************************************************
-        Part 4.b.
-      **************************************************/
-      bool flag = true;
-      for (auto& m : masses) {
-        m.update_acceleration();
-        m.update_velocity(DT);
-        m.update_position(DT);
-        if (flag == true) {
-            fs1 << 0 << " " << 0 << " " << m.p[-1] << std::endl;
-            flag = false;
-        } else {
-            fs2 << 0 << " " << 0 << " " << m.p[-1] << std::endl;
+        //iterate over the springs
+        for (auto& s : springs) {
+            double f = s.springForce();
+            std::vector<float> temp;
+            double magnitude = 0;
+            for (int i=0; i<3; i++) {
+                temp.push_back(s.m1.p[i]-s.m2.p[i]);
+                magnitude += pow(s.m1.p[i]-s.m2.p[i], 2);
+            }
+            std::vector<float> tempUnit = temp;
+            for (int i=0; i<3; i++)
+                tempUnit[i] /= sqrt(std::abs (magnitude));
+            for (int i=0; i<3; i++) {
+                tempUnit[i] *= f;
+                s.m1.F[i] += tempUnit[i];
+                s.m2.F[i] -= tempUnit[i];
+            }
+
+            /**************************************************
+              Part 4.b.
+            **************************************************/
+            bool flag = true;
+            for (auto& m : masses) {
+                m.update_acceleration();
+                m.update_velocity(DT);
+                m.update_position(DT);
+                if (c == 50) {
+                    if (flag == true) {
+                        fs1 << 0 << " " << 0 << " " << m.p.back() << std::endl;
+                        flag = false;
+                    } else {
+                        fs2 << 0 << " " << 0 << " " << m.p.back() << std::endl;
+                    }
+                }
+            }
+            if (!flag) c =0;
+
+            time_inc();
+            c++;
+
         }
-
-
-
-      }
-//
-//      std::vector<double> ms1(s1.getVec1());
-//      std::vector<double> ms2(s1.getVec2());
-//
-//
-//      for(std::vector<double>::const_iterator i = ms1.begin(); i != ms1.end(); ++i)
-//          fs1 << *i << ' ';
-//      fs1 << std::endl;
-//
-//      for(std::vector<double>::const_iterator i = ms2.begin(); i != ms2.end(); ++i)
-//          fs2 << *i << ' ';
-//      fs2 << std::endl;
-          c = 0;
-//          }
-          time_inc();
-//          c++;
-
-      }
     } //<end Simulation Loop>
     fs1.close();
     fs2.close();
     return 0;
 }
 
-auto vectorMultiplication(const std::vector<double>& v1, const std::vector<double>& v2)
+auto vectorMultiplication(const std::vector<float>& v1, const std::vector<float>& v2)
 {
-    std::vector<double> result;
+    std::vector<float> result;
     std::transform(v1.begin(), v1.end(), v2.begin(),
-                   std::back_inserter(result), std::multiplies<double>());
+                   std::back_inserter(result), std::multiplies<float>());
     return result;
 }
