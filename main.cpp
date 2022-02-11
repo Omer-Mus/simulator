@@ -40,7 +40,7 @@ int main() {
     std::ofstream fs2("mass2.csv");
 
     //<Start Simulation Loop>
-    while (T < 4) {
+    while (T < 7) {
         /**************************************************
           Part 4.a.
         **************************************************/
@@ -89,10 +89,10 @@ int main() {
                 m.update_position(DT);
                 if (c == 50) {
                     if (flag == true) {
-                        fs1 << 0 << " " << 0 << " " << m.p.back() << std::endl;
+                        fs1 << 0 << "," << 0 << "," << m.p.back() << std::endl;
                         flag = false;
                     } else {
-                        fs2 << 0 << " " << 0 << " " << m.p.back() << std::endl;
+                        fs2 << 0 << "," << 0 << "," << m.p.back() << std::endl;
                     }
                 }
             }
@@ -100,6 +100,8 @@ int main() {
 
             time_inc();
             c++;
+            for (auto& m : masses) // reset F
+                m.F = { 0, 0, 0};
 
         }
     } //<end Simulation Loop>
