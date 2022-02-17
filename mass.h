@@ -1,5 +1,6 @@
 #include <vector>
 #include <cmath>
+#include <iostream>
 
 #ifndef MASS_H
 #define MASS_H
@@ -18,8 +19,8 @@ public:
     std::vector<float> v; //velocity
     std::vector<float> a; //acceleration
     std::vector<float> F; //external forces
-
-    Mass(float x, float y, float z, float mass) {
+    Mass(){};
+    Mass(float x, float y, float z, float mass=0.8) {
         m = mass;  // intialize mass
         //set intial position
         p.push_back(x);
@@ -57,25 +58,27 @@ public:
 
     // update velocity
     void update_velocity(const float DT) {
-        for (int i = 0; i < 3; i++ ) {
+        for (int i = 0; i < 3; i++ )
             v[i] = v[i] + DT*a[i];
-        }
     }
 
     // update position
     void update_position(const float DT) {
-        for (int i = 0; i < 3; i++ ) {
+        for (int i = 0; i < 3; i++ )
             p[i] = p[i] + DT*v[i];
-        }
     }
 
     // calculate
     void update_acceleration() {
-        for (int i = 0; i < 3; i++ ) {
-            a[i] = round(F[i]/m);
-        }
+        for (int i = 0; i < 3; i++ )
+            a[i] = F[i]/m;
     }
 
+    void update_damping() {
+        for(int i=0; i < 3; ++i)
+            v[i] *= 0.9999;
+
+    }
 };
 
 
