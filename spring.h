@@ -8,15 +8,16 @@
 class Spring {
 public:
     float L0 = 0;
-    float K = 10'000;
-    Mass m1 = Mass(0,0,0,0);
-    Mass m2 = Mass(0,0,0,0);
+    float K = 1000;
+    Mass m1 = Mass(0,0,1,0.8);
+    Mass m2 = Mass(0,0,2,0.8);
 
-    Spring(Mass m1, Mass m2, float K = 10'000) {
+    Spring(){}
+    Spring(Mass &m1, Mass &m2, float K_c = 1000) {
         m1 = m1;
         m2 = m2;
-        K = K;
-        L0 = sqrt(pow((m1.p[0] - m2.p[0]), 2) + pow(m1.p[1] - m2.p[1], 2) + pow(m1.p[2] - m2.p[2], 2));
+        K = K_c;
+        L0 = sqrt(pow(abs(m1.p[0] - m2.p[0]), 2) + pow(abs(m1.p[1] - m2.p[1]), 2) + pow(abs(m1.p[2] - m2.p[2]), 2));
     }
     void operator = (const Spring &S ) {
         m1 = S.m1;
@@ -25,8 +26,16 @@ public:
         L0 = S.L0;
     }
     double springForce() {
-        float L = sqrt(pow((m1.p[0] - m2.p[0]), 2) + pow(m1.p[1] - m2.p[1], 2) + pow(m1.p[2] - m2.p[2], 2));
-        return K * (L - L0);
+//        std::cout << m1.p[0] << " " <<  m2.p[0] << "\n";
+//        std::cout << m1.p[1] << " " <<  m2.p[1] << "\n";
+//        std::cout << m1.p[2] << " " << m2.p[2] << "\n\n";
+        double powers = pow(abs(m1.p[0] - m2.p[0]), 2) + pow(abs(m1.p[1] - m2.p[1]), 2) + pow(abs(m1.p[2] - m2.p[2]), 2);
+//        std::cout << powers << "\n";
+
+//        if (!powers || isnan(powers)) return K*(0 - L0);
+        float L = sqrt(powers);
+//        std::cout << L << " " << L0 << " " << K * (L - L0) << "\n";
+        return K * (L0 - L);
     }
     std::vector<float> getVec1() {
         std::vector<float> v(m1.p.begin(), m1.p.end());
