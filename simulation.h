@@ -502,7 +502,7 @@ public:
 
 
 
-    void spit_results()
+    void show_results()
     {
 //        std::string filename = "hi.py";
         std::string command = "python3 /Users/omeromer/Desktop/simulator-main/graph.py";
