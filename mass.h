@@ -14,24 +14,24 @@ PS: If you don't use the mass.external variable, then get rid of it.
 class Mass {
 
 public:
-    float m = 0;
-    std::vector<float> p; //position
-    std::vector<float> v; //velocity
-    std::vector<float> a; //acceleration
-    std::vector<float> F; //external forces
+    double m = 0;
+    std::vector<double> p; //position
+    std::vector<double> v; //velocity
+    std::vector<double> a; //acceleration
+    std::vector<double> F; //external forces
     Mass(){};
-    Mass(float x, float y, float z, float mass=0.8) {
-        m = mass;  // intialize mass
+    Mass(double x, double y, double z, double mass=0.8) {
+        this->m = mass;  // intialize mass
         //set intial position
-        p.push_back(x);
-        p.push_back(y);
-        p.push_back(z);
+        this->p.push_back(x);
+        this->p.push_back(y);
+        this->p.push_back(z);
 
         // set velocity, acceleration & Froce to 0
         for (int i=0; i < 3; i ++) {
-            v.push_back(0);
-            a.push_back(0);
-            F.push_back(0); // F = a*m
+            this->v.push_back(0);
+            this->a.push_back(0);
+            this->F.push_back(0); // F = a*m
         }
         // intially, gravitiy is the acceleration
     }
@@ -42,42 +42,58 @@ public:
 
     // assigment operator overload
     void operator = (const Mass &M ) {
-        m = M.m;
-        p = M.p;
-        a = M.a;
-        v = M.v;
-        F = M.F;
+        this->m = M.m;
+        this->p = M.p;
+        this->a = M.a;
+        this->v = M.v;
+        this->F = M.F;
     }
 
     // calculate force
     void init_force(int x, int y, int z) {
-        F.push_back(x*m);
-        F.push_back(y*m);
-        F.push_back(z*m);
+        this->F.push_back(x*this->m);
+        this->F.push_back(y*this->m);
+        this->F.push_back(z*this->m);
     }
 
     // update velocity
-    void update_velocity(const float DT) {
-        for (int i = 0; i < 3; i++ )
-            v[i] = v[i] + DT*a[i];
+    void update_velocity(const double DT, double damping) {
+        for (int i = 0; i < 3; i++ ) {
+            this->v[i] = this->v[i] + DT * this->a[i];
+            this->v[i] *= damping;
+        }
     }
 
     // update position
-    void update_position(const float DT) {
+    void update_position(const double DT) {
         for (int i = 0; i < 3; i++ )
-            p[i] = p[i] + DT*v[i];
+            this->p[i] = this->p[i] + DT*this->v[i];
     }
 
     // calculate
     void update_acceleration() {
         for (int i = 0; i < 3; i++ )
-            a[i] = F[i]/m;
+            this->a[i] = this->F[i]/this->m;
     }
 
     void update_damping() {
         for(int i=0; i < 3; ++i)
-            v[i] *= 0.9999;
+            this->v[i] *= 0.9999;
 
+    }
+    void print() {
+        std::cout << "m " << m << "\n";
+
+        std::cout << "sizes " << F.size() << " " << p.size() << "\n";
+
+        for(auto& f : p)
+            std::cout << "p " << f << "\n";
+        for(auto& f : v)
+            std::cout << "v " << f << "\n";
+        for(auto& f : a)
+            std::cout << "a " << f << "\n";
+        for(auto& f : F)
+            std::cout << "F " << f << "\n";
     }
 };
 
