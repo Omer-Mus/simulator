@@ -74,7 +74,7 @@ int main()
 //    std::vector<Spring> sp;
 //    sp.push_back(Spring(masses[0], masses[3]));
     sim.simulate(springs, masses);
-//    sim.spit_results();
+//    sim.show_results();
     return 0;
 }
 
